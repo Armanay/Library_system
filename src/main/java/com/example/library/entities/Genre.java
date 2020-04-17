@@ -13,9 +13,9 @@ public class Genre {
     @ManyToMany(mappedBy = "genreList", fetch = FetchType.EAGER)
     private List<Book> bookList;
 
-    public List<Book> getBookList() {
-        return bookList;
-    }
+//    public List<Book> getBookList() {
+//        return bookList;
+//    }
 
     public void setBookList(List<Book> bookList) {
         this.bookList = bookList;

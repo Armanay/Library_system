@@ -15,11 +15,14 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
-@Component
-@Service
+
+@RestController
+@RequestMapping("/returnedBooks")
 public class ReturnedBookContr implements ApplicationEventPublisherAware {
     @Autowired
     private ReturnedRepository returnedRepository;
@@ -37,7 +40,15 @@ public class ReturnedBookContr implements ApplicationEventPublisherAware {
     @Autowired
     private MemberRepository memberRepository;
 
-    public void returnBook(Book book, Member member){
+    @GetMapping("")
+    public List<ReturnedBook> returnedBooks(){
+        return returnedRepository.findAll();
+    }
+
+    @PostMapping("/{memberid}/{bookid}")
+    public ReturnedBook returnBook(@PathVariable("memberid") Long memberid, @PathVariable("bookid") Long bookid){
+        Member member = memberRepository.findById(memberid).get();
+        Book book = bookRepository.findById(bookid).get();
         Date date = new Date();
         ReturnedBook returnedBook = new ReturnedBook();
         returnedBook.setBook(book);
@@ -49,6 +60,7 @@ public class ReturnedBookContr implements ApplicationEventPublisherAware {
         bookRepository.save(book);
         returnedRepository.save(returnedBook);
         this.eventPublisher.publishEvent(new ReturnBookEvent(this,book));
+        return  returnedBook;
     }
 
 

@@ -14,13 +14,14 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
-@Component
-@Service
+@RestController
+@RequestMapping("/borrowedBooks")
 public class BorrowedBookContr implements ApplicationEventPublisherAware {
     @Autowired
     private BorrowedBookRepository borrowedBookRepository;
@@ -34,16 +35,12 @@ public class BorrowedBookContr implements ApplicationEventPublisherAware {
     @Autowired
     private MemberRepository memberRepository;
 
-    public List<BorrowedBook> borrowedBooks(){
 
-        return borrowedBookRepository.findAll();
-    }
-    public BorrowedBook getById(Long id)
-    {
-        return borrowedBookRepository.findById(id).get();
-    }
-    public void borrowBook(Book book, Member member){
+    @PostMapping("/{memberid}/{bookid}")
+    public BorrowedBook borrowBook( @PathVariable("memberid") Long memberid, @PathVariable("bookid") Long bookid){
         Date date = new Date();
+        Member member = memberRepository.findById(memberid).get();
+        Book book = bookRepository.findById(bookid).get();
         if(book.getQuantity() == 0 ){
             System.out.println("Quantity = 0");
         }
@@ -59,29 +56,25 @@ public class BorrowedBookContr implements ApplicationEventPublisherAware {
             if (member.getMemberType() == MemberType.Student){
                 this.eventPublisher.publishEvent(new StudentBorrowBookEvent(this,borrowedBook));
             }
-
+            return borrowedBook;
 
         }
-
+        return null;
     }
-    public void returnBook(Book book, Member member){
+    @DeleteMapping("/{memberid}/{bookid}")
+    public BorrowedBook returnBook(@PathVariable("memberid") Long memberid, @PathVariable("bookid") Long bookid){
 
-        for(BorrowedBook borrowedBook:borrowedBookRepository.findAll()){
-            if(borrowedBook.getMember().getId() == member.getId() ) {
-                if (borrowedBook.getBook().getId() == book.getId()) {
-                    borrowedBookRepository.delete(borrowedBook);
-                    System.out.println("Molodec kitap karyz emessin");
+        for(Member member1:memberRepository.findAll()){
+            if (member1.getId().equals(memberid)) {
+                for (BorrowedBook borrowedBook : member1.getBorrowedBooks()) {
+                    if (borrowedBook.getBook().getId().equals(bookid)) {
+                            borrowedBookRepository.delete(borrowedBook);
+                            return borrowedBook;
+                    }
                 }
-                else {
-                    System.out.println("Senin algan kitaptarynnyn ishinde ondai kitap zhok");
-                }
-            }
-            else {
-                System.out.println("Ondai member zhok");
             }
         }
-
-
+        return null;
     }
 
     @Override

@@ -13,4 +13,6 @@ import java.util.List;
 public interface BookRepository extends JpaRepository<Book,Long> {
     @Query("SELECT b FROM Book b WHERE b.isAvailable = true  AND b.quantity > 0")
     List<Book> booklist();
+
+    List<Book> findBookByAuthor(String author);
 }

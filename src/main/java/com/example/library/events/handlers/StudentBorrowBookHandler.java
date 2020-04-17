@@ -9,6 +9,6 @@ public class StudentBorrowBookHandler implements ApplicationListener<StudentBorr
 
     @Override
     public void onApplicationEvent(StudentBorrowBookEvent studentBorrowBookEvent) {
-        System.out.println(studentBorrowBookEvent.getBorrowedBook().getMember().getName() + " you have 2 month to return this book, because you are " + studentBorrowBookEvent.getBorrowedBook().getMember());
+//        System.out.println(studentBorrowBookEvent.getBorrowedBook().getMember().getName() + " you have 2 month to return this book, because you are " + studentBorrowBookEvent.getBorrowedBook().getMember());
     }
 }

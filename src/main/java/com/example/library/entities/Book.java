@@ -48,9 +48,9 @@ public class Book {
         this.genreList = genreList;
     }
 
-    public List<BorrowedBook> getBorrowedBooks() {
-        return borrowedBooks;
-    }
+//    public List<BorrowedBook> getBorrowedBooks() {
+//        return borrowedBooks;
+//    }
 
     public void setBorrowedBooks(List<BorrowedBook> borrowedBooks) {
         this.borrowedBooks = borrowedBooks;
