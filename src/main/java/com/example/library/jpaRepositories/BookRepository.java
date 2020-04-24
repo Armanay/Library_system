@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
 @Repository
 public interface BookRepository extends JpaRepository<Book,Long> {
     @Query("SELECT b FROM Book b WHERE b.isAvailable = true  AND b.quantity > 0")

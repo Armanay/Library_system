@@ -1,10 +1,10 @@
 package com.example.library.controllers;
 
 import com.example.library.entities.Member;
-import com.example.library.jpaRepositories.MemberRepository;
+import com.example.library.server.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,28 +13,29 @@ import java.util.List;
 @RequestMapping("/members")
 public class MemberContr {
     @Autowired
-    private MemberRepository repository;
+    private UserService userService;
 
     @GetMapping("")
     public List<Member> members(){
-        return repository.findAll();
+        return userService.members();
     }
 
     @GetMapping("/{id}")
     public Member findById(@PathVariable("id") Long id)
     {
-        return repository.findById(id).get();
+        return userService.findMemberById(id);
     }
 
-    @PostMapping("")
+    @PostMapping()
     public void addMember(@RequestBody Member member){
-        repository.save(member);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("authentication.getName() = " + authentication.getName());
+        userService.addMember(member);
     }
 
     @DeleteMapping("/{id}")
-    public void removeClient(@PathVariable("id") Long id)
+    public void removeMember(@PathVariable("id") Long id)
     {
-        Member member = repository.findById(id).get();
-        repository.delete(member);
+        userService.removeMember(id);
     }
 }
