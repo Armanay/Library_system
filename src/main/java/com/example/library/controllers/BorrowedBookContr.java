@@ -9,6 +9,7 @@ import com.example.library.events.StudentBorrowBookEvent;
 import com.example.library.jpaRepositories.BookRepository;
 import com.example.library.jpaRepositories.BorrowedBookRepository;
 import com.example.library.jpaRepositories.MemberRepository;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -35,7 +36,7 @@ public class BorrowedBookContr implements ApplicationEventPublisherAware {
     @Autowired
     private MemberRepository memberRepository;
 
-
+    @ApiOperation(value = "Borrow book")
     @PostMapping("/{memberid}/{bookid}")
     public BorrowedBook borrowBook( @PathVariable("memberid") Long memberid, @PathVariable("bookid") Long bookid){
         Date date = new Date();
@@ -61,6 +62,8 @@ public class BorrowedBookContr implements ApplicationEventPublisherAware {
         }
         return null;
     }
+
+    @ApiOperation(value = "Return Borrowed book")
     @DeleteMapping("/{memberid}/{bookid}")
     public BorrowedBook returnBook(@PathVariable("memberid") Long memberid, @PathVariable("bookid") Long bookid){
 

@@ -10,6 +10,7 @@ import com.example.library.jpaRepositories.BookRepository;
 import com.example.library.jpaRepositories.BorrowedBookRepository;
 import com.example.library.jpaRepositories.MemberRepository;
 import com.example.library.jpaRepositories.ReturnedRepository;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -45,6 +46,7 @@ public class ReturnedBookContr implements ApplicationEventPublisherAware {
         return returnedRepository.findAll();
     }
 
+    @ApiOperation(value = "Return borrowed book")
     @PostMapping("/{memberid}/{bookid}")
     public ReturnedBook returnBook(@PathVariable("memberid") Long memberid, @PathVariable("bookid") Long bookid){
         Member member = memberRepository.findById(memberid).get();
